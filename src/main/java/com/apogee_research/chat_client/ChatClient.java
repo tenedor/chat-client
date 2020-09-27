@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 public class ChatClient {
+
+    private static final String SIGN_OUT = "SIGN OUT";
+
     private final BufferedReader clientIn;
     private final PrintWriter clientOut;
 
@@ -24,6 +27,11 @@ public class ChatClient {
     }
 
     private void processStdIn(String stdInLine) {
-        clientOut.println(stdInLine);
+        if (stdInLine.toUpperCase().equals(SIGN_OUT)) {
+            clientOut.println("User has signed out.");
+            System.exit(0);
+        } else {
+            clientOut.println(stdInLine);
+        }
     }
 }
