@@ -7,17 +7,19 @@ import java.io.PrintWriter;
 public class ChatClient {
     private final BufferedReader clientIn;
     private final PrintWriter clientOut;
+    private final String username;
 
-    public ChatClient(BufferedReader clientIn, PrintWriter clientOut) {
+    public ChatClient(BufferedReader clientIn, PrintWriter clientOut, String username) {
         this.clientIn = clientIn;
         this.clientOut = clientOut;
+        this.username = username;
     }
 
     public void run() throws IOException {
         StdInThread thread = new StdInThread(this::processStdIn);
         thread.start();
 
-        clientOut.println("A user has joined the chat");
+        clientOut.printf("%s has joined the chat\n", username);
 
         String receivedMessage;
         while ((receivedMessage = clientIn.readLine()) != null) {
@@ -26,6 +28,6 @@ public class ChatClient {
     }
 
     private void processStdIn(String stdInLine) {
-        clientOut.println(stdInLine);
+        clientOut.printf("%s: %s\n", username, stdInLine);
     }
 }
