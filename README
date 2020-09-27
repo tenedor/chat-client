@@ -1,0 +1,9 @@
+# Build
+
+gradle build
+
+If gradle is not installed, ./gradlew will work in its place.
+
+# Run
+
+./run/bin/chat-client
