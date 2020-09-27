@@ -26,12 +26,8 @@ public class Main {
                 BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
         ) {
-            StdInThread thread = new StdInThread(out);
-            thread.start();
-            String inputLine;
-            while ((inputLine = in.readLine()) != null) {
-                System.out.println(inputLine);
-            }
+            ChatClient chatClient = new ChatClient(in, out);
+            chatClient.run();
         }
     }
 
@@ -42,36 +38,9 @@ public class Main {
                 BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
         ) {
-            StdInThread thread = new StdInThread(out);
-            thread.start();
-            String inputLine;
-            while ((inputLine = in.readLine()) != null) {
-                System.out.println(inputLine);
-            }
+            ChatClient chatClient = new ChatClient(in, out);
+            chatClient.run();
         }
     }
 
-    private static class StdInThread extends Thread {
-
-        private final PrintWriter out;
-
-        public StdInThread(PrintWriter out) {
-            this.out = out;
-        }
-
-        @Override
-        public void run() {
-            try (
-                    BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in))
-            ) {
-                String userInput;
-                while ((userInput = stdIn.readLine()) != null) {
-                    out.println(userInput);
-                }
-            } catch (IOException e) {
-                e.printStackTrace(System.err);
-                System.exit(1);
-            }
-        }
-    }
 }
