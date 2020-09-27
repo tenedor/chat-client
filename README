@@ -6,4 +6,8 @@ If gradle is not installed, ./gradlew will work in its place.
 
 # Run
 
-./run/bin/chat-client
+Choose a port and run two instances of the chat client on the same machine.
+The first instance must be the host and the second the guest:
+
+./run/bin/chat-client --host <port>    # host
+./run/bin/chat-client <port>           # guest
