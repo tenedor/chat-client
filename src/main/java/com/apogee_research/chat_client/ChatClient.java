@@ -17,6 +17,8 @@ public class ChatClient {
         StdInThread thread = new StdInThread(this::processStdIn);
         thread.start();
 
+        clientOut.println("A user has joined the chat");
+
         String receivedMessage;
         while ((receivedMessage = clientIn.readLine()) != null) {
             System.out.println(receivedMessage);
