@@ -8,37 +8,65 @@ public class Main {
     public static void main(String[] args) throws IOException {
         System.out.println("test");
 
-        if (args.length == 1) {
-            int port = Integer.parseInt(args[0]);
-            runClient("localhost", port);
-        } else if (args.length == 2 && args[0].equals("--host")) {
-            int port = Integer.parseInt(args[1]);
-            runServer(port);
+        boolean isHost = false;
+        String portString = null;
+        String username = null;
+
+        for (int i = 0; i < args.length; i++) {
+            String arg = args[i];
+            switch (arg) {
+                case "--host":
+                    isHost = true;
+                    break;
+                case "-p":
+                    portString = args[i + 1];
+                    i++;
+                    break;
+                case "-u":
+                    username = args[i + 1];
+                    i++;
+                    break;
+                default:
+                    printUsageAndExit();
+            }
+        }
+
+        if (portString == null || username == null) {
+            printUsageAndExit();
         } else {
-            System.err.println("Usage: chat-client [--host] <port>");
-            System.exit(1);
+            int port = Integer.parseInt(portString);
+            if (isHost) {
+                runServer(port, username);
+            } else {
+                runClient("localhost", port, username);
+            }
         }
     }
 
-    private static void runClient(String hostName, int port) throws IOException {
+    private static void printUsageAndExit() {
+        System.err.println("Usage: chat-client [--host] -p <port> -u <username>");
+        System.exit(1);
+    }
+
+    private static void runClient(String hostName, int port, String username) throws IOException {
         try (
                 Socket socket = new Socket(hostName, port);
                 BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
         ) {
-            ChatClient chatClient = new ChatClient(in, out);
+            ChatClient chatClient = new ChatClient(in, out, username);
             chatClient.run();
         }
     }
 
-    private static void runServer(int port) throws IOException {
+    private static void runServer(int port, String username) throws IOException {
         try (
                 ServerSocket serverSocket = new ServerSocket(port);
                 Socket clientSocket = serverSocket.accept();
                 BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
         ) {
-            ChatClient chatClient = new ChatClient(in, out);
+            ChatClient chatClient = new ChatClient(in, out, username);
             chatClient.run();
         }
     }
