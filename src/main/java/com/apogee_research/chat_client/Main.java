@@ -6,8 +6,6 @@ import java.net.*;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        System.out.println("test");
-
         if (args.length == 1) {
             int port = Integer.parseInt(args[0]);
             runClient("localhost", port);
